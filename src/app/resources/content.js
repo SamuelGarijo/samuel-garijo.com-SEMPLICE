@@ -8,17 +8,17 @@ const person = {
   },
   role: "UX/UI Designer",
   avatar: "/images/minimal-careto.png",
-  email: "example@gmail.com",
+  email: "samuelgarijocortes@gmail.com",
   location: "Europe/Budapest", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["Spanish", "English", "Italian"], // optional: Leave the array empty if you don't want to display languages
 };
 
 const newsletter = {
   display: true,
-  title: <>Request {person.firstName}'s Private Portfolio</>,
+  title: <>Request {person.firstName}'s full Portfolio</>,
   description: (
     <>
-      To protect the privacy of my clients I can not publish here the 80% of my jobs,
+      To protect the privacy of my clients I can not publish here some of my projects,
       so feel free to drop here your email and I'll send it to you, thanks!
     </>
   ),
@@ -55,7 +55,7 @@ const home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between design and code</>,
+  headline: <>Building bridges between designers and coders</>,
   featured: {
     display: true,
     title: <>Recent project: <strong className="ml-4">LVGL</strong></>,
@@ -63,8 +63,10 @@ const home = {
   },
   subline: (
     <>
-      I'm Samuel, a UX/UI Designer with over 5 years of experience in digital design for major brands like Facebook, Ralph Lauren, and Doordash,
-      leveraging a strong background Fine Arts.
+      I'm Samuel, a UX/UI Designer with over 5 years working for 
+      major brands like Facebook, Ralph Lauren & SaaS startups. <br>
+      </br>
+      <strong> Beauty and System</strong> cannot be separated in my workflow.
     </>
   ),
 };

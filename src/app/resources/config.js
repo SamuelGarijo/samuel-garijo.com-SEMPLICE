@@ -1,12 +1,12 @@
 // IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL = "https://demo.magic-portfolio.com";
+const baseURL = "https://samuelgarijo.com";
 
 const routes = {
   "/": true,
   "/about": true,
   "/work": true,
   "/blog": false,
-  "/gallery": true,
+  "/gallery": false,
 };
 
 // Enable password protection on selected routes
@@ -94,7 +94,9 @@ const effects = {
 const display = {
   location: true,
   time: true,
-  themeSwitcher: true
+  themeSwitcher: true,
+  navbar: false,
+  header: false
 };
 
 const mailchimp = {
