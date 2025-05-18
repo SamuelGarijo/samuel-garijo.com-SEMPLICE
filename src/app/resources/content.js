@@ -8,7 +8,7 @@ const person = {
   },
   role: "UX/UI Designer",
   avatar: "/images/minimal-careto.png",
-  email: "samuelgarijocortes@gmail.com",
+  email: "info@samuelgarijo.com",
   location: "Europe/Budapest", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["Spanish", "English", "Italian"], // optional: Leave the array empty if you don't want to display languages
 };

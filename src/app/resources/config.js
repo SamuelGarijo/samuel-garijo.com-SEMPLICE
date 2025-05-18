@@ -5,7 +5,7 @@ const routes = {
   "/": true,
   "/about": true,
   "/work": true,
-  "/blog": false,
+  "/blog": true,
   "/gallery": false,
 };
 
@@ -100,7 +100,7 @@ const display = {
 };
 
 const mailchimp = {
-  action: "https://url/subscribe/post?parameters",
+  action: "https://app.us10.list-manage.com/subscribe/post?u=e404c0e22dad0c38f0d2a6066&id=4220fee79d&f_id=00c518e2f0",
   effects: {
     mask: {
       cursor: true,
