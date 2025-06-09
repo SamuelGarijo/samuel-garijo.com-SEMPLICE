@@ -95,7 +95,7 @@ const display = {
   location: true,
   time: true,
   themeSwitcher: true,
-  navbar: false,
+  navbar: true,
   header: false
 };
 
