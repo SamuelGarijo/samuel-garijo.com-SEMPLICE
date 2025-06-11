@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cookie from "cookie";
 import crypto from "crypto";
-import { createSession, cleanupSessions } from "./sessions";
+import { createSession, cleanupSessions } from "../sessions";
 
 // Simple in-memory rate limiting
 const attempts = new Map<string, { count: number; firstAttempt: number }>();
