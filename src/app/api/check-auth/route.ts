@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cookie from "cookie";
-import { sessions } from "../authenticate/route";
+import { getSession, deleteSession, isSessionValid } from "../sessions";
 
 export async function GET(request: NextRequest) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -12,13 +12,13 @@ export async function GET(request: NextRequest) {
   }
 
   // Check if session exists and is valid
-  const session = sessions.get(token);
-  if (session && Date.now() < session.expiresAt) {
+  if (isSessionValid(token)) {
     return NextResponse.json({ authenticated: true }, { status: 200 });
   } else {
     // Clean up expired session
+    const session = getSession(token);
     if (session) {
-      sessions.delete(token);
+      deleteSession(token);
     }
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }

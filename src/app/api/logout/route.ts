@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cookie from "cookie";
-import { sessions } from "../authenticate/route";
+import { deleteSession } from "../sessions";
 
 export async function POST(request: NextRequest) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
   const token = cookies.authToken;
 
   // Remove session from memory if it exists
-  if (token && sessions.has(token)) {
-    sessions.delete(token);
+  if (token) {
+    deleteSession(token);
   }
 
   // Clear the auth cookie

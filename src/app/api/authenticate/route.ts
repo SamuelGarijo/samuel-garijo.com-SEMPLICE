@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cookie from "cookie";
 import crypto from "crypto";
+import { createSession, cleanupSessions } from "./sessions";
 
 // Simple in-memory rate limiting
 const attempts = new Map<string, { count: number; firstAttempt: number }>();
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
-
-// Simple in-memory session store (consider using Redis or a database in production)
-const sessions = new Map<string, { createdAt: number; expiresAt: number }>();
 
 function cleanupAttempts() {
   const now = Date.now();
@@ -19,14 +17,6 @@ function cleanupAttempts() {
   }
 }
 
-function cleanupSessions() {
-  const now = Date.now();
-  for (const [token, session] of sessions.entries()) {
-    if (now > session.expiresAt) {
-      sessions.delete(token);
-    }
-  }
-}
 
 function getClientIp(request: NextRequest): string {
   // Try to get the real IP from various headers
@@ -80,10 +70,7 @@ export async function POST(request: NextRequest) {
     const sessionDuration = parseInt(process.env.SESSION_DURATION_HOURS || "24") * 60 * 60 * 1000;
     
     // Store session
-    sessions.set(sessionToken, {
-      createdAt: now,
-      expiresAt: now + sessionDuration
-    });
+    createSession(sessionToken, sessionDuration);
     
     // Clear failed attempts on successful login
     attempts.delete(clientIp);
@@ -116,6 +103,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Incorrect password" }, { status: 401 });
   }
 }
-
-// Export the sessions for use in check-auth route
-export { sessions };
