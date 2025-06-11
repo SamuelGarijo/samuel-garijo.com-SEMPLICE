@@ -16,7 +16,7 @@ type ThemeProviderState = {
 
 const initialState: ThemeProviderState = {
   theme: "system",
-  resolvedTheme: 'dark',
+  resolvedTheme: 'light',
   setTheme: () => null,
 };
 
@@ -25,7 +25,13 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({ children }: ThemeProviderProps) {
   // Start with system theme on server, will be updated on client
   const [theme, setTheme] = useState<Theme>("system");
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
+    // Check system preference on initial load
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'light'; // Default to light theme on server
+  });
   const [mounted, setMounted] = useState(false);
 
   // Initialize theme from localStorage on mount

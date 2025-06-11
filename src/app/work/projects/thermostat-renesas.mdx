@@ -1,0 +1,99 @@
+---
+title: "Smart Thermostat UI Design for Renesas EK-RA8D1"
+publishedAt: "2024-11-08"
+summary: "Led UI design for embedded thermostat interface showcasing Renesas EK-RA8D1 evaluation kit at Embedded World 2025, reaching 15,000+ industry professionals through high-visibility trade show demonstration."
+images:
+  - "/images/projects/project-02/thermostat-mockup.png"
+team:
+  - name: "Samuel Garijo"
+    role: "UI Designer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/company/once-ui/"
+---
+
+**Project Duration:** November 2024 - February 2025
+**Role:** UI Designer
+**Tools:** Figma, LVGL, Human Factors Research
+
+Led UI design for embedded thermostat interface showcasing Renesas EK-RA8D1 evaluation kit at Embedded World 2025, reaching 15,000+ industry professionals through high-visibility trade show demonstration.
+
+## Project Context
+
+Renesas, the world's 16th largest semiconductor corporation, partnered with LVGL (leading open-source embedded graphics library) to demonstrate next-generation embedded UI capabilities. The collaboration aimed to prove that smartphone-like interfaces could run efficiently on embedded hardware—a critical advancement for IoT and smart home applications.
+
+**Business Objective:** Showcase EK-RA8D1 running Zephyr OS with LVGL integration at Embedded World 2025, demonstrating technical capabilities to potential enterprise customers and development partners.
+
+## My Role and Team Collaboration
+
+Working remotely from Spain, I served as UI Designer for an international team:
+- **Felipe Neves** (Technical Lead, Brazil): Hardware integration and performance optimization
+- **Gabor Kiss-Vámosi** (LVGL CEO, Hungary): Graphics library implementation
+- **John Kikidis** (Renesas, Greece): Stakeholder management and trade show coordination
+
+My responsibilities centered on creating the visual interface that would demonstrate both Renesas hardware capabilities and LVGL's graphics potential to industry decision-makers.
+
+## Design Challenges and Constraints
+
+### Trade Show Performance Pressure
+**Hard January 2025 deadline** with December delivery requirement for stakeholder review and hardware integration testing. The interface needed to "pop" visually for trade show impact while maintaining the reliability expected of industrial hardware demonstrations.
+
+### Embedded Hardware Limitations
+**Memory constraints:** Limited graphics storage meant every UI element required optimization—high-resolution images or complex animations could cause performance failures during live demonstrations.
+
+**Non-standard display specifications:** 4.5" screen with unique pixel density (854 pixels across 96mm) required custom text sizing calculations, as standard web/mobile guidelines (16px base fonts, 9px minimums) don't apply to embedded displays.
+
+**Physical viewing context:** Wall-mounted thermostat viewed from ~1 meter distance demanded different legibility requirements than handheld devices.
+
+## When There's No Standard: Designing Readable Text from Scratch
+
+Designing for embedded systems like the Renesas RA8D1-EK presents a unique challenge: there's no UI kit, no mobile OS, and no standard screen scaling like @2x or @3x. You're working pixel-perfect at 1x, and every decision about spacing or typography has direct physical consequences.
+
+With no clear documentation about minimum font sizes for this specific device, I decided to reverse-engineer a custom typographic standard from first principles.
+
+### Research-Driven Starting Point
+Using Perplexity.ai and human factors literature, I found that 5mm is often cited as the minimum text height for comfortable readability at arm's length (≈1 meter)—a common scenario for fixed, wall-mounted or desk-level embedded screens.
+
+### Math Meets Reality
+Knowing the Renesas screen has:
+- 854 vertical pixels
+- A 10cm physical height (≈100mm)
+- → That gives us 8.54 px/mm
+
+So: 5mm × 8.54 px/mm ≈ 42.7 pixels
+
+That's the theoretical minimum pixel height for text to remain legible from a distance—almost 43 px. However, I immediately recognized that this number felt high, especially for compact layouts.
+
+### Real-World Testing with Prototypes
+Rather than relying blindly on formulas, I prototyped layouts using physical-size mockups on my iPad at a 1:1 scale (480x854 px, the screen's actual resolution). I tested font sizes from 24px to 44px, observing how readable they were under typical usage conditions.
+
+**What I found:**
+- 16 px is far too small for anything critical (confirmed by colleagues and real-world feedback)
+- **32 px struck the perfect balance**—readable, spatially efficient, and visually aligned with the hierarchy
+- This became my new minimum baseline for CTA labels, primary values, and time indicators
+
+> "In embedded UIs, the minimum readable font size sets the baseline for everything else. It drives spacing, layout, and visual hierarchy—making it one of the most critical early design decisions."
+
+> "Ensure to get the minimum and maximum font sizes right because the font size for all other components will be according to this." — Aela Design, Typography in UI: How To Enhance User Experience
+
+### Creating Design System for Underserved Category
+Embedded thermostat interfaces lack the comprehensive pattern libraries available for web/mobile design (Dribbble, Mobbin). This required building systematic visual references from scratch.
+
+**Solution:** I created my own design system library, categorizing existing thermostat interfaces by component type and function—essentially building "Mobbin for embedded HVAC."
+
+**Design evolution process:**
+1. **Wireframing:** Structured layouts prioritizing essential functions (current temperature, target temperature, basic controls)
+2. **Visual research:** Systematic gathering of references from traditional thermostats, smart home interfaces, and related control devices
+3. **Synthesis:** Combining functional requirements with aesthetic insights to create interfaces that feel both familiar and modern
+
+## Results and Professional Impact
+
+**Executive Validation:** Senior Staff Business Development Engineer Otto Aureliano Rolloff personally demonstrated the interface in official Renesas video content, indicating company confidence in the design as their primary showcase for RA8D1 + Zephyr RTOS integration.
+
+**Strategic Partnership Success:** The thermostat interface became the official demonstration example for Renesas hardware capabilities, with the collaboration contributing to LVGL's subsequent built-in support for Renesas hardware across multiple development boards.
+
+**Trade Show Achievement:** Interface successfully showcased at Embedded World 2025 in Nürnberg, representing Renesas technical capabilities to 15,000+ industry professionals.
+
+**Technical Achievements:**
+- Established reusable text sizing methodology for embedded displays using human factors research
+- Successfully optimized interface performance within memory constraints while maintaining visual appeal
+- Created systematic design approach bridging consumer UI expectations with embedded hardware limitations

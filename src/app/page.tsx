@@ -3,9 +3,9 @@ import React from "react";
 import { Heading, Flex, Text, Button, Avatar, RevealFx, Column, Badge, Row } from "@/once-ui/components";
 import { Projects } from "@/components/work/Projects";
 
-import { baseURL, routes } from "@/app/resources";
+import { baseURL } from "@/app/resources";
 import { home, about, person, newsletter } from "@/app/resources/content";
-import { Mailchimp } from "@/components";
+import { PortfolioRequest } from "@/components";
 import { Posts } from "@/components/blog/Posts";
 import { Meta, Schema } from "@/once-ui/modules";
 
@@ -78,9 +78,9 @@ export default function Home() {
         </Column>
       </Column>
       <RevealFx translateY="16" delay={0.6}>
-        <Projects range={[1, 1]} />
+        <Projects range={[1, 2]} />
       </RevealFx>
-      {newsletter.display && <Mailchimp newsletter={newsletter} />}
+      {newsletter.display && <PortfolioRequest portfolioRequest={newsletter} />}
     </Column>
   );
 }
