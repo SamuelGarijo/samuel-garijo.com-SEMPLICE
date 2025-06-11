@@ -245,7 +245,7 @@ export const PortfolioRequest = ({ portfolioRequest }: { portfolioRequest: Portf
           />
           {isSuccess && (
             <Text style={{ position: "relative" }} variant="body-default-s" onBackground="success-medium">
-              Thank you! I'll send you my portfolio soon.
+              Thank you! I&apos;ll send you my portfolio soon.
             </Text>
           )}
           <Flex height="48" vertical="center">

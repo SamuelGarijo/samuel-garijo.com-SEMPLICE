@@ -15,11 +15,11 @@ const person = {
 
 const newsletter = {
   display: true,
-  title: <>Request {person.firstName}'s full Portfolio</>,
+  title: <>Request {person.firstName}&apos;s full Portfolio</>,
   description: (
     <>
       To protect the privacy of my clients I can not publish here some of my projects,
-      so feel free to drop here your email and I'll send it to you, thanks!
+      so feel free to drop here your email and I&apos;ll send it to you, thanks!
     </>
   ),
 };
@@ -63,7 +63,7 @@ const home = {
   },
   subline: (
     <>
-      I'm Samuel, a UX/UI Designer with over 5 years working for 
+      I&apos;m Samuel, a UX/UI Designer with over 5 years working for 
       major brands like Facebook, Ralph Lauren & SaaS startups. <br>
       </br>
       <strong> Beauty and System</strong> cannot be separated in my workflow.

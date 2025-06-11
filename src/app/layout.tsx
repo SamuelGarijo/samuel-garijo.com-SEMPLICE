@@ -73,7 +73,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                     root.setAttribute('data-theme', theme);
                   }
                 } catch (e) {
-                  document.documentElement.setAttribute('data-theme', 'dark');
+                  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
                 }
               })();
             `,
