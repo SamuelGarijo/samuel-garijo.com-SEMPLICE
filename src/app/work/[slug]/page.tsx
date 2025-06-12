@@ -73,8 +73,8 @@ export default async function Project({
         }}
       />
       <Column maxWidth="xs" gap="16">
-        <Button data-border="rounded" href="/work" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
-          Projects
+        <Button data-border="rounded" href="/" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
+          Home
         </Button>
         <Heading variant="display-strong-s">{post.metadata.title}</Heading>
       </Column>

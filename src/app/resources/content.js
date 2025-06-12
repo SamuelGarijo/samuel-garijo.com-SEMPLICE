@@ -18,8 +18,9 @@ const newsletter = {
   title: <>Request {person.firstName}&apos;s full Portfolio</>,
   description: (
     <>
-      To protect the privacy of my clients I can not publish here some of my projects,
-      so feel free to drop here your email and I&apos;ll send it to you, thanks!
+      To protect the privacy of my clients I can not publish here some of my
+      projects, so feel free to drop here your email and I&apos;ll send it to
+      you, thanks!
     </>
   ),
 };
@@ -55,18 +56,20 @@ const home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between designers and coders</>,
+  headline: <>From Business to Design, and from Design to Code</>,
   featured: {
     display: true,
-    title: <>Recent project: <strong className="ml-4">LVGL</strong></>,
+    title: (
+      <>
+        Recent project: <strong className="ml-4">LVGL</strong>
+      </>
+    ),
     href: "/work/building-once-ui-a-customizable-design-system",
   },
   subline: (
     <>
-      I&apos;m Samuel, a UX/UI Designer with over 5 years working for 
-      major brands like Facebook, Ralph Lauren & SaaS startups. <br>
-      </br>
-      <strong> Beauty and System</strong> cannot be separated in my workflow.
+      I&apos;m Samuel, a Senior UI Designer +6 years working for Marketing
+      Agencies & SaaS startups.
     </>
   ),
 };
@@ -92,7 +95,11 @@ const about = {
     title: "Introduction",
     description: (
       <>
-        Samuel is a Valencia-based visual designer working at the frontier of embedded UI design. Now part of the team behind the LVGL Editor—a Figma-like tool for low-resource devices—he blends interface craft, code understanding, and design systems to shape functional tools for engineers and designers alike.
+        Samuel is a Valencia-based visual designer working at the frontier of
+        embedded UI design. Now part of the team behind the LVGL Editor—a
+        Figma-like tool for low-resource devices—he blends interface craft, code
+        understanding, and design systems to shape functional tools for
+        engineers and designers alike.
       </>
     ),
   },
@@ -106,12 +113,12 @@ const about = {
         role: "Senior Design Engineer",
         achievements: [
           <>
-            Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user
-            engagement and 30% faster load times.
+            Redesigned the UI/UX for the FLY platform, resulting in a 20%
+            increase in user engagement and 30% faster load times.
           </>,
           <>
-            Spearheaded the integration of AI tools into design workflows, enabling designers to
-            iterate 50% faster.
+            Spearheaded the integration of AI tools into design workflows,
+            enabling designers to iterate 50% faster.
           </>,
         ],
         images: [
@@ -130,12 +137,12 @@ const about = {
         role: "Lead Designer",
         achievements: [
           <>
-            Developed a design system that unified the brand across multiple platforms, improving
-            design consistency by 40%.
+            Developed a design system that unified the brand across multiple
+            platforms, improving design consistency by 40%.
           </>,
           <>
-            Led a cross-functional team to launch a new product line, contributing to a 15% increase
-            in overall company revenue.
+            Led a cross-functional team to launch a new product line,
+            contributing to a 15% increase in overall company revenue.
           </>,
         ],
         images: [],
@@ -162,7 +169,9 @@ const about = {
     skills: [
       {
         title: "Figma",
-        description: <>Able to prototype in Figma with Once UI with unnatural speed.</>,
+        description: (
+          <>Able to prototype in Figma with Once UI with unnatural speed.</>
+        ),
         // optional: leave the array empty if you don't want to display images
         images: [
           {
@@ -181,7 +190,9 @@ const about = {
       },
       {
         title: "Next.js",
-        description: <>Building next gen apps with Next.js + Once UI + Supabase.</>,
+        description: (
+          <>Building next gen apps with Next.js + Once UI + Supabase.</>
+        ),
         // optional: leave the array empty if you don't want to display images
         images: [
           {

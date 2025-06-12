@@ -16,13 +16,21 @@ const protectedRoutes = {
   "/work/automate-design-handovers-with-a-figma-to-code-pipeline": true,
 };
 
-import { Geist } from "next/font/google";
+import { Lora, Open_Sans } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 
-const primaryFont = Geist({
+const headingFont = Lora({
   variable: "--font-primary",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const bodyFont = Open_Sans({
+  variable: "--font-secondary",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "700", "800"],
 });
 
 const monoFont = Geist_Mono({
@@ -32,9 +40,9 @@ const monoFont = Geist_Mono({
 });
 
 const font = {
-  primary: primaryFont,
-  secondary: primaryFont,
-  tertiary: primaryFont,
+  primary: headingFont,
+  secondary: bodyFont,
+  tertiary: bodyFont,
   code: monoFont,
 };
 
@@ -48,7 +56,7 @@ const style = {
   border: "playful", // rounded | playful | conservative
   surface: "translucent", // filled | translucent
   transition: "all", // all | micro | macro
-  scaling: "100" // 90 | 95 | 100 | 105 | 110
+  scaling: "100", // 90 | 95 | 100 | 105 | 110
 };
 
 const effects = {
@@ -71,9 +79,9 @@ const effects = {
   },
   dots: {
     display: true,
-    opacity: 40,
-    size: "2",
-    color: "brand-background-strong",
+    opacity: 20,
+    size: "16",
+    color: "neutral-on-background-strong",
   },
   grid: {
     display: false,
@@ -97,11 +105,12 @@ const display = {
   time: true,
   themeSwitcher: true,
   navbar: true,
-  header: false
+  header: false,
 };
 
 const mailchimp = {
-  action: "https://app.us10.list-manage.com/subscribe/post?u=e404c0e22dad0c38f0d2a6066&id=4220fee79d&f_id=00c518e2f0",
+  action:
+    "https://app.us10.list-manage.com/subscribe/post?u=e404c0e22dad0c38f0d2a6066&id=4220fee79d&f_id=00c518e2f0",
   effects: {
     mask: {
       cursor: true,
@@ -144,4 +153,13 @@ const mailchimp = {
   },
 };
 
-export { routes, protectedRoutes, effects, style, display, mailchimp, baseURL, font };
+export {
+  routes,
+  protectedRoutes,
+  effects,
+  style,
+  display,
+  mailchimp,
+  baseURL,
+  font,
+};

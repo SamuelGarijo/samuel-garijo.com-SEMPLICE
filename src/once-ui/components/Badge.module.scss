@@ -1,9 +1,10 @@
 .animation {
     position: relative;
     overflow: hidden;
+    z-index: 10;
 
     &::before {
-        content: '';
+        content: "";
         opacity: 0;
         border-radius: var(--radius-full);
         position: absolute;

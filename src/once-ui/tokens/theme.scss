@@ -1,8 +1,8 @@
 :root {
     /* FONT FAMILY */
-    --font-family-body:     var(--font-primary);
-    --font-family-heading:  var(--font-secondary);
-    --font-family-label:    var(--font-tertiary);
+    --font-family-body:     var(--font-secondary);
+    --font-family-heading:  var(--font-primary);
+    --font-family-label:    var(--font-secondary);
     --font-family-code:     var(--font-code);
 
     --font-size-heading-multiplier:   1;
@@ -48,7 +48,7 @@
     --icon: url('/trademark/icon-dark.svg');
     --type: url('/trademark/type-dark.svg');
     
-    --page-background:              var(--neutral-background-weak);
+    --page-background:              var(--static-warm-beige);
     --backdrop:                     var(--static-black-medium);
 
     --solid-border-color-brand:     var(--brand-alpha-strong);

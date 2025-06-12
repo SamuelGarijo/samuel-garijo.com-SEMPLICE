@@ -34,10 +34,10 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   });
   const [mounted, setMounted] = useState(false);
 
-  // Initialize theme from localStorage on mount
+  // Initialize theme from sessionStorage on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
+    const savedTheme = sessionStorage.getItem('theme') as Theme;
+    if (savedTheme && savedTheme !== 'system') {
       setTheme(savedTheme);
     }
     setMounted(true);
