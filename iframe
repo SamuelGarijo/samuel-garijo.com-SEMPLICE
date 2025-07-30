@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Overlay Solution</title>
+</head>
+<body>
+    <style>
+    /* Reset Semplice containers */
+    #content-1996 #section_k1yqtt7zh,
+    #section_k1yqtt7zh,
+    #row_w4s2k12js,
+    #column_mmyfxydxa,
+    smp-content-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100vh !important;
+    }
+
+    /* Main container */
+    .interactive-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        overflow: hidden;
+    }
+
+    /* Iframe styling */
+    .interactive-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    /* Mobile overlay */
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .overlay-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 20px;
+    }
+
+    .rotate-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: rotate 2s ease-in-out infinite;
+    }
+
+    .overlay-text {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+
+    .fullscreen-btn {
+        background: #007AFF;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: none;
+    }
+
+    /* Show overlay on mobile portrait */
+    @media screen and (max-width: 768px) and (orientation: portrait) {
+        .mobile-overlay {
+            display: block;
+        }
+
+        .mobile-overlay .overlay-text {
+            content: "Rotate your device for better experience";
+        }
+    }
+
+    /* Show fullscreen button on mobile landscape */
+    @media screen and (max-width: 768px) and (orientation: landscape) {
+        .mobile-overlay {
+            display: block;
+        }
+
+        .rotate-icon {
+            display: none;
+        }
+
+        .fullscreen-btn {
+            display: inline-block;
+        }
+    }
+
+    /* Fullscreen mode */
+    .interactive-container:fullscreen .mobile-overlay,
+    .interactive-container:-webkit-full-screen .mobile-overlay,
+    .interactive-container:-moz-full-screen .mobile-overlay,
+    .interactive-container:-ms-fullscreen .mobile-overlay {
+        display: none !important;
+    }
+
+    @keyframes rotate {
+        0%, 100% {
+            transform: rotate(-90deg);
+        }
+        50% {
+            transform: rotate(0deg);
+        }
+    }
+
+    /* Exit fullscreen button */
+    .exit-fullscreen {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        z-index: 10000;
+        font-size: 14px;
+    }
+
+    .interactive-container:fullscreen .exit-fullscreen,
+    .interactive-container:-webkit-full-screen .exit-fullscreen,
+    .interactive-container:-moz-full-screen .exit-fullscreen,
+    .interactive-container:-ms-fullscreen .exit-fullscreen {
+        display: block;
+    }
+    </style>
+
+    <div class="interactive-container" id="container">
+        <iframe
+            class="interactive-iframe"
+            src="https://daily-ability-150609.framer.app/"
+            allowfullscreen>
+        </iframe>
+
+        <!-- Mobile overlay -->
+        <div class="mobile-overlay" id="overlay">
+            <div class="overlay-content">
+                <div class="rotate-icon" id="rotateIcon">📱</div>
+                <div class="overlay-text" id="overlayText">
+                    Pro tip: Rotate your device for better experience
+                </div>
+                <button class="fullscreen-btn" id="fullscreenBtn" onclick="enterFullscreen()">
+                    Enter Fullscreen Mode
+                </button>
+            </div>
+        </div>
+
+        <!-- Exit fullscreen button -->
+        <button class="exit-fullscreen" onclick="exitFullscreen()">
+            Exit Fullscreen
+        </button>
+    </div>
+
+    <script>
+    const container = document.getElementById('container');
+    const overlay = document.getElementById('overlay');
+    const overlayText = document.getElementById('overlayText');
+    const rotateIcon = document.getElementById('rotateIcon');
+
+    // Update overlay content based on orientation
+    function updateOverlay() {
+        if (window.innerWidth <= 768) {
+            if (window.orientation === 0 || window.orientation === 180) {
+                // Portrait
+                overlayText.textContent = "Pro tip: Rotate your device for better experience";
+                rotateIcon.style.display = 'block';
+                document.getElementById('fullscreenBtn').style.display = 'none';
+            } else {
+                // Landscape
+                overlayText.textContent = "Pro tip: Use fullscreen mode for immersive experience";
+                rotateIcon.style.display = 'none';
+                document.getElementById('fullscreenBtn').style.display = 'inline-block';
+            }
+        }
+    }
+
+    // Enter fullscreen
+    function enterFullscreen() {
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+            container.mozRequestFullScreen();
+        } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
+        }
+    }
+
+    // Exit fullscreen
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+
+    // Listen for orientation changes
+    window.addEventListener('orientationchange', updateOverlay);
+    window.addEventListener('resize', updateOverlay);
+
+    // Initial check
+    updateOverlay();
+
+    // Hide WordPress admin bar if needed
+    if (document.body.classList.contains('postid-1996')) {
+        const adminBar = document.getElementById('wpadminbar');
+        if (adminBar) adminBar.style.display = 'none';
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+/* ===== CSS VARIABLES ===== */
+:root {
+    /* Light mode colors */
+    --bg-color: #f7f7f7;
+    --text-color: #1a1a1a;
+    --text-secondary: #666666;
+
+    /* Button colors */
+    --button-bg: #000000;
+    --button-text: #ffffff;
+    --button-hover: #0b42f0;
+
+    /* Navbar with glassmorphism (50% opacity) */
+    --navbar-bg: rgba(247, 247, 247, 0.5);
+    --navbar-text: #000000;
+
+    /* Social icons */
+    --social-icon-color: #000000;
+    --social-icon-hover: #666666;
+
+    /* Logo - SIMPLIFICADO A UNA SOLA VARIABLE */
+    --current-logo: url("https://samuelgarijo.com/wp-content/uploads/2025/07/Company-Logo.svg");
+}
+
+smp-column.height-fit-content {
+    height: fit-content !important;
+    min-height: auto !important;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1f2020;
+        --text-color: #f5f5f5;
+        --text-secondary: #b0b0b0;
+        --button-bg: #ffffff;
+        --button-text: #000000;
+        --navbar-bg: rgba(31, 32, 32, 0.5);
+        --navbar-text: #ffffff;
+        --social-icon-color: #ffffff;
+        --social-icon-hover: #cccccc;
+
+        /* Logo blanco para dark mode */
+        --current-logo: url("https://samuelgarijo.com/wp-content/uploads/2025/07/lvgl-logo-white.svg");
+    }
+}
+
+/* ===== GLOBAL STYLES ===== */
+/* Base elements and containers */
+body,
+html,
+#semplice-container,
+.semplice-container,
+.content-container,
+.content-block,
+.transition-wrap,
+.semplice-section,
+section,
+div[class*="background"],
+div[class*="section"] {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Override specific sections with hardcoded backgrounds */
+#section_9c9f1ca30,
+#content-1882 #section_9c9f1ca30 {
+    background-color: var(--bg-color) !important;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+li,
+a {
+    color: var(--text-color) !important;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    opacity: 1;
+}
+
+/* ===== NAVBAR GLASSMORPHISM ===== */
+/* Main navbar containers */
+header.semplice-header,
+smp-nav-section.smp-navbar,
+#navbar-top,
+#navbar-bottom,
+#navbar-overlay {
+    background-color: var(--navbar-bg) !important;
+    color: var(--navbar-text) !important;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Navbar inner elements - transparent backgrounds */
+smp-nav-section smp-container,
+smp-nav-row,
+smp-nav-column,
+smp-nav-content {
+    background-color: transparent !important;
+    color: var(--navbar-text) !important;
+}
+
+/* All navbar text and links */
+header *,
+smp-nav-section *,
+#navbar-top *,
+#navbar-bottom * {
+    color: var(--navbar-text) !important;
+    transition: color 0.3s ease;
+}
+
+/* Hamburger menu lines specifically */
+.hamburger span,
+.hamburger span::before,
+.hamburger span::after {
+    background-color: var(--navbar-text) !important;
+}
+
+/* Navbar links specific styling */
+smp-nav-content a,
+nav ul li a,
+header a {
+    color: var(--navbar-text) !important;
+    background: transparent !important;
+}
+
+smp-nav-content a:hover,
+nav ul li a:hover,
+header a:hover {
+    opacity: 0.7 !important;
+}
+
+/* ===== BUTTONS - SIMPLIFIED ===== */
+/* Remove backgrounds from all button containers */
+.smp-button,
+.is-content,
+.smp-button *:not(a),
+.is-content *:not(a),
+div[data-content-for] {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Style only the actual button link */
+.smp-button a,
+.is-content a,
+smp-content[data-module="button"] a {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+    border: 2px solid var(--button-bg) !important;
+    padding: 12px 24px !important;
+    border-radius: 6px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Ensure button text uses correct color */
+.smp-button a *,
+.is-content a *,
+smp-content[data-module="button"] a * {
+    color: var(--button-text) !important;
+}
+
+/* Button hover state */
+.smp-button a:hover,
+.is-content a:hover,
+smp-content[data-module="button"] a:hover {
+    background-color: var(--button-hover) !important;
+    border-color: var(--button-hover) !important;
+}
+
+/* Ensure text stays white on hover */
+.smp-button a:hover *,
+.is-content a:hover * {
+    color: #ffffff !important;
+}
+
+/* ===== SOCIAL ICONS ===== */
+/* Icon color control */
+.social-profile svg,
+.social-profile svg path,
+li.social-profile svg,
+li.social-profile svg path {
+    fill: var(--social-icon-color) !important;
+    stroke: var(--social-icon-color) !important;
+    transition:
+        fill 0.3s ease,
+        stroke 0.3s ease !important;
+}
+
+/* Icon hover effects */
+.social-profile:hover svg,
+.social-profile:hover svg path,
+li.social-profile:hover svg,
+li.social-profile:hover svg path {
+    fill: var(--social-icon-hover) !important;
+    stroke: var(--social-icon-hover) !important;
+    transform: scale(1.1);
+}
+
+/* ===== PASSWORD PROTECTED PAGE ===== */
+/* Fondo principal de la página */
+.post-password-form {
+    background-color: var(--bg-color) !important;
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+}
+
+.post-password-form .inner {
+    background-color: var(--bg-color) !important;
+}
+
+/* Textos */
+.post-password-form .title,
+.post-password-form .subtitle {
+    color: var(--text-color) !important;
+    transition: color 0.3s ease;
+}
+
+/* Input de contraseña */
+.post-password-form .post-password-input {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border: 2px solid var(--text-color) !important;
+    transition: all 0.3s ease;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+}
+
+.post-password-form .post-password-input::placeholder {
+    color: var(--text-secondary) !important;
+    opacity: 0.7;
+}
+
+/* Botón Submit */
+.post-password-form .post-password-submit {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+    border: 2px solid var(--button-bg) !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px 20px !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+}
+
+.post-password-form .post-password-submit:hover {
+    background-color: var(--button-hover) !important;
+    border-color: var(--button-hover) !important;
+    color: #ffffff !important;
+}
+
+/* Icono del candado - cambiar color según el modo */
+.post-password-form .password-lock svg path {
+    fill: var(--text-color) !important;
+    transition: fill 0.3s ease;
+}
+
+/* Asegurar que el contenedor principal también tenga el fondo correcto */
+body.logged-in,
+body.postid-1863,
+#content-holder,
+.content-container,
+.transition-wrap,
+.sections {
+    background-color: var(--bg-color) !important;
+}
+
+/* Específico para dark mode - mejorar contraste del input */
+@media (prefers-color-scheme: dark) {
+    .post-password-form .post-password-input {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .post-password-form .post-password-input:focus {
+        border-color: var(--text-color) !important;
+        outline: none !important;
+    }
+}
+
+/* ===== LOGO CONDICIONAL - CORREGIDO ===== */
+smp-content.logo-conditional .smp-image .is-content img {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    z-index: -1 !important;
+}
+
+smp-content.logo-conditional .smp-image .is-content {
+    width: 200px !important;
+    height: 60px !important;
+    background-image: var(--current-logo) !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    transition: background-image 0.3s ease !important;
+    display: block !important;
+    position: relative !important;
+}
+/* ===== SPACER VERTICAL LINE - CORREGIDO ===== */
+body .vertical-line-spacer .spacer-container {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+body .vertical-line-spacer .is-content {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+body .vertical-line-spacer .spacer {
+    /* NO tocar height - usar la altura que Semplice define */
+    width: 1px !important;
+    background-color: var(--text-color) !important;
+    transition: background-color 0.3s ease !important;
+    border-radius: 1px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    /* Asegurar que se muestre como bloque */
+    display: block !important;
+    opacity: 0.5 !important;
+}
+
+/* ===== ENLACE TRADICIONAL - OVERRIDE COMPLETO ===== */
+body p .traditional-link,
+body .traditional-link {
+    /* Eliminar TODOS los backgrounds */
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    /* Color de enlace azul tradicional */
+    color: #0066cc !important;
+    text-decoration: underline !important;
+
+    /* Eliminar estilos que pueden causar problemas */
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: color 0.2s ease !important;
+
+    /* Asegurar que se comporte como enlace */
+    cursor: pointer !important;
+    display: inline !important;
+}
+
+body p .traditional-link:hover,
+body .traditional-link:hover {
+    /* Hover azul más oscuro */
+    color: #0052a3 !important;
+    text-decoration: underline !important;
+
+    /* ELIMINAR completamente cualquier background en hover */
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    /* Eliminar opacity que puede estar causando problemas */
+    opacity: 1 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
