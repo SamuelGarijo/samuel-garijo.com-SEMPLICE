@@ -1,0 +1,480 @@
+<!-- COPIAR TODO ESTE CÓDIGO EN UN CODE MODULE DE SEMPLICE -->
+
+<style>
+    /* Project Modal Styles */
+    .project-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 99999;
+    }
+
+    .project-modal.active {
+        display: block;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        cursor: pointer;
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        max-width: 1400px;
+        max-height: 900px;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .modal-content {
+            background: #1a1a1a;
+        }
+    }
+
+    .modal-iframe {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        border: none;
+        flex: 1;
+        display: block;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.1);
+    }
+
+    /* Loading spinner */
+    .modal-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #666;
+        font-size: 14px;
+    }
+
+    /* Mobile overlay for orientation/fullscreen */
+    .modal-mobile-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 15;
+        color: white;
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .modal-overlay-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 20px;
+    }
+
+    .rotate-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: rotate 2s ease-in-out infinite;
+    }
+
+    .overlay-text {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+
+    .fullscreen-btn {
+        background: #007aff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: none;
+    }
+
+    @keyframes rotate {
+        0%,
+        100% {
+            transform: rotate(-90deg);
+        }
+        50% {
+            transform: rotate(0deg);
+        }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 95%;
+            height: 95%;
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 12px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            z-index: 100001;
+        }
+
+        /* Show overlay on portrait */
+        @media (orientation: portrait) {
+            .modal-mobile-overlay {
+                display: block;
+            }
+
+            .rotate-icon {
+                display: block;
+            }
+
+            .fullscreen-btn {
+                display: none;
+            }
+        }
+
+        /* Show fullscreen button on landscape */
+        @media (orientation: landscape) {
+            .modal-mobile-overlay {
+                display: block;
+            }
+
+            .rotate-icon {
+                display: none;
+            }
+
+            .fullscreen-btn {
+                display: inline-block;
+            }
+        }
+    }
+
+    /* Fullscreen mode - hide overlay */
+    .project-modal:fullscreen .modal-mobile-overlay,
+    .project-modal:-webkit-full-screen .modal-mobile-overlay,
+    .project-modal:-moz-full-screen .modal-mobile-overlay,
+    .project-modal:-ms-fullscreen .modal-mobile-overlay {
+        display: none !important;
+    }
+
+    /* Exit fullscreen button */
+    .exit-fullscreen {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 70px; /* Next to close button */
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        z-index: 100001;
+        font-size: 14px;
+    }
+
+    .project-modal:fullscreen .exit-fullscreen,
+    .project-modal:-webkit-full-screen .exit-fullscreen,
+    .project-modal:-moz-full-screen .exit-fullscreen,
+    .project-modal:-ms-fullscreen .exit-fullscreen {
+        display: block;
+    }
+</style>
+
+<script>
+    // Wrap in IIFE to avoid conflicts
+    (function () {
+        // ===== CONFIGURACIÓN: Define qué proyectos abren en modal =====
+        const MODAL_PROJECTS = [
+            "ux-audits", // Agrega aquí los slugs de los proyectos que quieres en modal
+            // 'otro-proyecto',  // Puedes agregar más proyectos
+            // 'proyecto-especial'
+        ];
+
+        // ===== FIN DE CONFIGURACIÓN =====
+
+        // Wait for DOM
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initProjectModal);
+        } else {
+            initProjectModal();
+        }
+
+        function initProjectModal() {
+            // Check if modal already exists
+            if (document.querySelector(".project-modal")) return;
+
+            // Create modal structure with mobile overlay
+            const modalHTML = `
+            <div class="project-modal" id="projectModal">
+                <div class="modal-backdrop"></div>
+                <div class="modal-content">
+                    <button class="modal-close" aria-label="Close">×</button>
+                    <button class="exit-fullscreen" onclick="exitModalFullscreen()">Exit Fullscreen</button>
+                    <div class="modal-loading">Loading project...</div>
+                    <iframe class="modal-iframe" style="display:none;"></iframe>
+
+                    <!-- Mobile overlay -->
+                    <div class="modal-mobile-overlay" id="modalOverlay">
+                        <div class="modal-overlay-content">
+                            <div class="rotate-icon" id="rotateIcon">📱</div>
+                            <div class="overlay-text" id="overlayText">
+                                Pro tip: Rotate your device for better experience
+                            </div>
+                            <button class="fullscreen-btn" id="fullscreenBtn">
+                                Enter Fullscreen Mode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            // Add to body
+            document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+            const modal = document.getElementById("projectModal");
+            const iframe = modal.querySelector(".modal-iframe");
+            const loading = modal.querySelector(".modal-loading");
+            const closeBtn = modal.querySelector(".modal-close");
+            const backdrop = modal.querySelector(".modal-backdrop");
+            const overlay = document.getElementById("modalOverlay");
+            const overlayText = document.getElementById("overlayText");
+            const rotateIcon = document.getElementById("rotateIcon");
+            const fullscreenBtn = document.getElementById("fullscreenBtn");
+
+            // Update overlay content based on orientation
+            function updateOverlay() {
+                if (
+                    window.innerWidth <= 768 &&
+                    modal.classList.contains("active")
+                ) {
+                    if (
+                        window.orientation === 0 ||
+                        window.orientation === 180
+                    ) {
+                        // Portrait
+                        overlayText.textContent =
+                            "Pro tip: Rotate your device for better experience";
+                        rotateIcon.style.display = "block";
+                        fullscreenBtn.style.display = "none";
+                    } else {
+                        // Landscape
+                        overlayText.textContent =
+                            "Pro tip: Use fullscreen mode for immersive experience";
+                        rotateIcon.style.display = "none";
+                        fullscreenBtn.style.display = "inline-block";
+                    }
+                }
+            }
+
+            // Enter fullscreen for modal
+            function enterModalFullscreen() {
+                if (modal.requestFullscreen) {
+                    modal.requestFullscreen();
+                } else if (modal.webkitRequestFullscreen) {
+                    modal.webkitRequestFullscreen();
+                } else if (modal.mozRequestFullScreen) {
+                    modal.mozRequestFullScreen();
+                } else if (modal.msRequestFullscreen) {
+                    modal.msRequestFullscreen();
+                }
+            }
+
+            // Exit fullscreen
+            window.exitModalFullscreen = function () {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            };
+
+            // Fullscreen button click
+            fullscreenBtn.addEventListener("click", enterModalFullscreen);
+
+            // Listen for orientation changes
+            window.addEventListener("orientationchange", updateOverlay);
+            window.addEventListener("resize", updateOverlay);
+
+            // Listen for messages from iframe content
+            window.addEventListener("message", function (event) {
+                if (event.data.type === "framer-loaded") {
+                    console.log(
+                        "Framer content loaded with height:",
+                        event.data.height,
+                    );
+                    // Ensure iframe maintains proper height
+                    if (iframe && iframe.style) {
+                        iframe.style.height = "100%";
+                        iframe.style.minHeight = "100%";
+                    }
+                }
+            });
+
+            // Close modal function
+            function closeModal() {
+                modal.classList.remove("active");
+                iframe.src = "";
+                iframe.style.display = "none";
+                loading.style.display = "block";
+                document.body.style.overflow = "";
+
+                // Exit fullscreen if active
+                if (
+                    document.fullscreenElement ||
+                    document.webkitFullscreenElement
+                ) {
+                    exitModalFullscreen();
+                }
+            }
+
+            // Open modal function
+            function openModal(url) {
+                modal.classList.add("active");
+                document.body.style.overflow = "hidden";
+
+                // Load iframe
+                iframe.src = url;
+                iframe.onload = function () {
+                    loading.style.display = "none";
+                    iframe.style.display = "block";
+
+                    // Force iframe height inheritance
+                    iframe.style.height = "100%";
+                    iframe.style.minHeight = "100%";
+                    iframe.style.flex = "1";
+
+                    // Try to communicate with nested iframe if possible
+                    try {
+                        // Send message to iframe content to ensure full height
+                        iframe.contentWindow.postMessage(
+                            {
+                                action: "modal-loaded",
+                                modalHeight: modal.offsetHeight,
+                                contentHeight:
+                                    modal.querySelector(".modal-content")
+                                        .offsetHeight,
+                            },
+                            "*",
+                        );
+                    } catch (e) {
+                        console.log("Cross-origin messaging not available");
+                    }
+
+                    // Check orientation on load
+                    updateOverlay();
+                };
+            }
+
+            // Check if URL should open in modal
+            function shouldOpenInModal(url) {
+                if (!url) return false;
+
+                // Check if the URL contains any of our modal projects
+                return MODAL_PROJECTS.some((project) => {
+                    return url.includes(project);
+                });
+            }
+
+            // Event listeners
+            closeBtn.addEventListener("click", closeModal);
+            backdrop.addEventListener("click", closeModal);
+
+            // ESC key to close
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && modal.classList.contains("active")) {
+                    closeModal();
+                }
+            });
+
+            // Intercept project clicks
+            document.addEventListener(
+                "click",
+                function (e) {
+                    // Find the actual link element
+                    let projectLink = e.target.closest("a.pg-link");
+
+                    // If not found, check if we clicked inside a project thumb
+                    if (!projectLink) {
+                        const thumb = e.target.closest(".thumb");
+                        if (thumb) {
+                            projectLink = thumb.querySelector("a.pg-link");
+                        }
+                    }
+
+                    if (projectLink && projectLink.href) {
+                        // Only intercept if it's one of our modal projects
+                        if (shouldOpenInModal(projectLink.href)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openModal(projectLink.href);
+                            console.log("Opening in modal:", projectLink.href);
+                            return false;
+                        } else {
+                            // Let the normal navigation happen
+                            console.log("Normal navigation:", projectLink.href);
+                        }
+                    }
+                },
+                true,
+            ); // Use capture phase
+        }
+    })();
+</script>
