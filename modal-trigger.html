@@ -214,7 +214,7 @@
         display: none;
         position: fixed;
         top: 20px;
-        right: 70px; /* Next to close button */
+        right: 70px;
         background: rgba(255, 255, 255, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.3);
         color: white;
@@ -236,12 +236,79 @@
 <script>
     // Wrap in IIFE to avoid conflicts
     (function () {
-        // ===== CONFIGURACIÓN: Define qué proyectos abren en modal =====
-        const MODAL_PROJECTS = [
-            "ux-audits", // Agrega aquí los slugs de los proyectos que quieres en modal
-            // 'otro-proyecto',  // Puedes agregar más proyectos
-            // 'proyecto-especial'
-        ];
+        // ===== CONFIGURACIÓN: Domain-Based Detection =====
+
+        function shouldOpenInModal(url) {
+            if (!url) return false;
+
+            // Check if URL contains framer.app domain
+            return url.includes("framer.app");
+        }
+
+        // ===== ENHANCED MOBILE DETECTION (2025 Best Practices) =====
+
+        async function isMobilePhone() {
+            // Method 1: Try modern User-Agent Client Hints API first
+            if (
+                "userAgentData" in navigator &&
+                navigator.userAgentData.getHighEntropyValues
+            ) {
+                try {
+                    const uaData =
+                        await navigator.userAgentData.getHighEntropyValues([
+                            "mobile",
+                            "model",
+                            "platform",
+                        ]);
+                    if (uaData.mobile && uaData.platform) {
+                        // It's mobile, but check screen size to exclude tablets
+                        const maxDimension = Math.max(
+                            window.innerWidth,
+                            window.innerHeight,
+                        );
+                        return maxDimension < 850; // Phones typically < 850px max dimension
+                    }
+                } catch (e) {
+                    console.log(
+                        "User-Agent Client Hints not available, falling back...",
+                    );
+                }
+            }
+
+            // Method 2: Enhanced fallback detection
+            const userAgent = navigator.userAgent.toLowerCase();
+            const hasTouch =
+                "ontouchstart" in window || navigator.maxTouchPoints > 0;
+            const maxDimension = Math.max(
+                window.innerWidth,
+                window.innerHeight,
+            );
+            const minDimension = Math.min(
+                window.innerWidth,
+                window.innerHeight,
+            );
+            const aspectRatio = maxDimension / minDimension;
+
+            // Check for mobile UA patterns (excluding tablets)
+            const isMobileUA =
+                /android.*mobile|iphone|ipod|blackberry|windows phone/.test(
+                    userAgent,
+                );
+            const isTabletUA =
+                /ipad|android(?!.*mobile)|tablet|kindle|silk/.test(userAgent);
+
+            // Size-based checks
+            const isSmallScreen = maxDimension < 850;
+            const isTallAspectRatio = aspectRatio > 1.6; // Phones are typically taller
+
+            // Combined logic: mobile UA + small screen OR (touch + small + tall)
+            if (isTabletUA) return false; // Explicitly exclude tablets
+
+            return (
+                (isMobileUA && isSmallScreen) ||
+                (hasTouch && isSmallScreen && isTallAspectRatio)
+            );
+        }
 
         // ===== FIN DE CONFIGURACIÓN =====
 
@@ -263,7 +330,7 @@
                 <div class="modal-content">
                     <button class="modal-close" aria-label="Close">×</button>
                     <button class="exit-fullscreen" onclick="exitModalFullscreen()">Exit Fullscreen</button>
-                    <div class="modal-loading">Loading project...</div>
+                    <div class="modal-loading">Loading Framer project...</div>
                     <iframe class="modal-iframe" style="display:none;"></iframe>
 
                     <!-- Mobile overlay -->
@@ -295,12 +362,57 @@
             const rotateIcon = document.getElementById("rotateIcon");
             const fullscreenBtn = document.getElementById("fullscreenBtn");
 
-            // Update overlay content based on orientation
-            function updateOverlay() {
-                if (
-                    window.innerWidth <= 768 &&
-                    modal.classList.contains("active")
-                ) {
+            // Track if device is mobile phone
+            let isMobileDevice = false;
+            let isInFullscreen = false;
+
+            // Initialize mobile detection
+            isMobilePhone().then((result) => {
+                isMobileDevice = result;
+                console.log("Device detected as mobile phone:", isMobileDevice);
+            });
+
+            // Fullscreen event listeners (modern approach)
+            function handleFullscreenChange() {
+                isInFullscreen = !!(
+                    document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement
+                );
+
+                updateOverlay();
+                console.log("Fullscreen state changed:", isInFullscreen);
+            }
+
+            document.addEventListener(
+                "fullscreenchange",
+                handleFullscreenChange,
+            );
+            document.addEventListener(
+                "webkitfullscreenchange",
+                handleFullscreenChange,
+            );
+            document.addEventListener(
+                "mozfullscreenchange",
+                handleFullscreenChange,
+            );
+            document.addEventListener(
+                "MSFullscreenChange",
+                handleFullscreenChange,
+            );
+
+            // Update overlay content based on mobile detection and orientation
+            async function updateOverlay() {
+                // Only show overlay on mobile phones, not tablets or desktop
+                if (!isMobileDevice || isInFullscreen) {
+                    overlay.style.display = "none";
+                    return;
+                }
+
+                if (modal.classList.contains("active")) {
+                    overlay.style.display = "block";
+
                     if (
                         window.orientation === 0 ||
                         window.orientation === 180
@@ -390,6 +502,9 @@
                 modal.classList.add("active");
                 document.body.style.overflow = "hidden";
 
+                // Update loading text for Framer projects
+                loading.textContent = "Loading Framer project...";
+
                 // Load iframe
                 iframe.src = url;
                 iframe.onload = function () {
@@ -423,16 +538,6 @@
                 };
             }
 
-            // Check if URL should open in modal
-            function shouldOpenInModal(url) {
-                if (!url) return false;
-
-                // Check if the URL contains any of our modal projects
-                return MODAL_PROJECTS.some((project) => {
-                    return url.includes(project);
-                });
-            }
-
             // Event listeners
             closeBtn.addEventListener("click", closeModal);
             backdrop.addEventListener("click", closeModal);
@@ -444,37 +549,108 @@
                 }
             });
 
-            // Intercept project clicks
+            // ===== ORIGINAL: Intercept clicks on regular <a> links =====
             document.addEventListener(
                 "click",
                 function (e) {
                     // Find the actual link element
-                    let projectLink = e.target.closest("a.pg-link");
+                    let projectLink = e.target.closest("a");
 
-                    // If not found, check if we clicked inside a project thumb
-                    if (!projectLink) {
-                        const thumb = e.target.closest(".thumb");
-                        if (thumb) {
-                            projectLink = thumb.querySelector("a.pg-link");
-                        }
-                    }
-
+                    // If we found a link and it has an href
                     if (projectLink && projectLink.href) {
-                        // Only intercept if it's one of our modal projects
+                        // Check if it's a Framer link
                         if (shouldOpenInModal(projectLink.href)) {
                             e.preventDefault();
                             e.stopPropagation();
                             openModal(projectLink.href);
-                            console.log("Opening in modal:", projectLink.href);
+                            console.log(
+                                "Opening Framer project in modal:",
+                                projectLink.href,
+                            );
                             return false;
                         } else {
-                            // Let the normal navigation happen
-                            console.log("Normal navigation:", projectLink.href);
+                            // Let normal navigation happen for non-Framer links
+                            console.log(
+                                "Normal navigation (not Framer):",
+                                projectLink.href,
+                            );
                         }
                     }
                 },
-                true,
-            ); // Use capture phase
+                true, // Use capture phase to catch events early
+            );
+
+            // ===== NUEVO: Intercept clicks on Semplice elements with data-smp-link =====
+            document.addEventListener(
+                "click",
+                function (e) {
+                    // Buscar elemento con data-smp-link en la cadena de elementos padre
+                    let sempliceElement = e.target.closest("[data-smp-link]");
+
+                    if (sempliceElement) {
+                        let url = sempliceElement.getAttribute("data-smp-link");
+
+                        if (url && shouldOpenInModal(url)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openModal(url);
+                            console.log(
+                                "Opening Framer from Semplice data-smp-link:",
+                                url,
+                            );
+                            return false;
+                        }
+                    }
+                },
+                true, // Use capture phase to catch events early
+            );
+
+            // ===== MÉTODO ALTERNATIVO: Convertir elementos Semplice en clickeables =====
+            function convertSempliceLinksToModal() {
+                const sempliceLinks =
+                    document.querySelectorAll("[data-smp-link]");
+
+                sempliceLinks.forEach((element) => {
+                    const url = element.getAttribute("data-smp-link");
+
+                    if (url && shouldOpenInModal(url)) {
+                        // Añadir cursor pointer para indicar que es clickeable
+                        element.style.cursor = "pointer";
+
+                        // Añadir evento click dedicado
+                        element.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openModal(url);
+                            console.log(
+                                "Opening Framer via converted Semplice element:",
+                                url,
+                            );
+                            return false;
+                        });
+
+                        console.log(
+                            "Converted Semplice element to modal trigger:",
+                            url,
+                        );
+                    }
+                });
+            }
+
+            // Ejecutar conversión cuando el DOM esté listo
+            setTimeout(convertSempliceLinksToModal, 500); // Delay para asegurar que Semplice ha cargado
+
+            // Make openModal function globally available for debugging
+            window.openModal = openModal;
+
+            // Debug: Log when modal system is ready
+            console.log(
+                "Enhanced Framer Modal System initialized (2025) - any framer.app links will open in modal",
+            );
+            console.log(
+                "Mobile detection: NavigatorUAData API + enhanced fallback methods",
+            );
+            console.log("Semplice data-smp-link integration: ACTIVE");
         }
     })();
 </script>
